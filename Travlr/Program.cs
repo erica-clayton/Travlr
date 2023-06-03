@@ -1,11 +1,16 @@
-﻿var builder = WebApplication.CreateBuilder(args);
+﻿using Travlr.Repositories;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
+using Microsoft.AspNetCore.Builder.Extensions;
 
-// Add services to the container.
+var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddTransient<IUserRepository, UserRepository>();
+builder.Services.AddTransient<ITripRepository, TripRepository>();
 
 var app = builder.Build();
 
@@ -14,6 +19,13 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    app.UseCors(options =>
+    {
+        options.AllowAnyOrigin();
+        options.AllowAnyMethod();
+        options.AllowAnyHeader();
+    });
 }
 
 app.UseHttpsRedirection();
