@@ -133,9 +133,9 @@ VALUES
 GO
 INSERT INTO [Stay] ([stayName], [stayAddress], [stayImage], [stayDescription], [stayNotes])
 VALUES
-    ('Rome Activity', '100 Rome St', null, 'a place to do things in Rome', 'it was good'),
-    ('Greece Activity', '100 Greece St', null, 'a place to do things in Greece', 'it was good'),
-    ('Mexico Activity', '100 Mexico St', null, 'a place to do things in Mexico', 'it was good')
+    ('Rome stay', '100 Rome St', null, 'a place stay in Rome', 'it was good'),
+    ('Greece stay', '100 Greece St', null, 'a place to stay in Greece', 'it was good'),
+    ('Mexico stay', '100 Mexico St', null, 'a place to stay in Mexico', 'it was good')
 GO
 INSERT INTO [StayOptions] ([tripId], [stayId])
 VALUES
@@ -149,7 +149,7 @@ VALUES
     (2,2),
     (3,3)
 GO
-INSERT INTO [DineOptions] ([tripId], [dineId])
+INSERT INTO [ActivityOptions] ([tripId], [activityId])
 VALUES
     (1,1),
     (2,2),

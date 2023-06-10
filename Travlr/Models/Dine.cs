@@ -1,5 +1,4 @@
-﻿using System;
-namespace Travlr.Models;
+﻿namespace Travlr.Models;
 
 public class Dine
 {

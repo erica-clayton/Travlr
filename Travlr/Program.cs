@@ -11,6 +11,9 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<ITripRepository, TripRepository>();
+builder.Services.AddTransient<IActivityRepository, ActivityRepository>();
+builder.Services.AddTransient<IStayRepository, StayRepository>();
+builder.Services.AddTransient<IDineRepository, DineRepository>();
 
 var app = builder.Build();
 
