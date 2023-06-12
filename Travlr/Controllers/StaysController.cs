@@ -8,25 +8,25 @@ namespace Travlr.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class ActivitiesController : ControllerBase
+    public class StaysController : ControllerBase
     {
-        private readonly IActivityRepository _activityRepo;
+        private readonly IStayRepository _staysRepo;
 
-        public ActivitiesController(IActivityRepository activityRepo)
+        public StaysController(IStayRepository stayRepo)
         {
-            _activityRepo = activityRepo;
+            _staysRepo = stayRepo;
         }
 
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(_activityRepo.GetAll());
+            return Ok(_staysRepo.GetAll());
         }
 
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var activity = _activityRepo.GetById(id);
+            var activity = _staysRepo.GetById(id);
             if (activity == null)
             {
                 return NotFound();
@@ -35,28 +35,28 @@ namespace Travlr.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post(Activity activity)
+        public IActionResult Post(Stay stay)
         {
-            _activityRepo.Add(activity);
-            return CreatedAtAction("Get", new { id = activity.Id }, activity);
+            _staysRepo.Add(stay);
+            return CreatedAtAction("Get", new { id = stay.Id }, stay);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put(int id, Activity activity)
+        public IActionResult Put(int id, Stay stay)
         {
-            if (id != activity.Id)
+            if (id != stay.Id)
             {
                 return BadRequest();
             }
 
-            _activityRepo.Update(activity);
+            _staysRepo.Update(stay);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            _activityRepo.Delete(id);
+            _staysRepo.Delete(id);
             return NoContent();
         }
     }
