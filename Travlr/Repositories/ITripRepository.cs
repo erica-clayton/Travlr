@@ -8,6 +8,7 @@ namespace Travlr.Repositories
         void Delete(int id);
         List<Trip> GetAll();
         Trip GetById(int id);
+        List<Trip> GetByUserId(int tripUserId);
         void Update(Trip trip);
     }
 }

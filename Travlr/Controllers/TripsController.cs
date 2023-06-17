@@ -31,7 +31,22 @@ namespace Travlr.Controllers
                 return NotFound();
             }
             return Ok(trip);
+
         }
+
+        [HttpGet("trips/{tripUserId}")]
+        public IActionResult GetTripsByUserId(int tripUserId)
+        {
+            var trips = _tripRepo.GetByUserId(tripUserId);
+
+            if (trips == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(trips);
+        }
+
 
         [HttpPost]
         public IActionResult Post(Trip trip)

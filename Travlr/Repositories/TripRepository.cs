@@ -22,7 +22,7 @@ namespace Travlr.Repositories
                                 t.tripName,
                                 t.pastTrip,
                                 t.description as tripDisciption,
-                                t.budget tripBudget
+                                t.budget as tripBudget
                                 FROM [Trip] t";
 
             var dineOptionSQL = @" SELECT         
@@ -70,7 +70,6 @@ namespace Travlr.Repositories
             using var tripCommand = connection.CreateCommand();
             tripCommand.CommandText = tripSQL;
             using var tripReader = tripCommand.ExecuteReader();
-           
 
             using var dineCommand = connection.CreateCommand();
             dineCommand.CommandText = dineOptionSQL;
@@ -92,30 +91,27 @@ namespace Travlr.Repositories
                 var trip = new Trip()
 
                 {
-                    Id = DbUtils.GetInt(tripReader, "id"),
+                    Id = DbUtils.GetInt(tripReader, "tripId"),
                     UserId = DbUtils.GetInt(tripReader, "tripUserId"),
                     TripName = DbUtils.GetString(tripReader, "tripName"),
                     PastTrip = DbUtils.GetBoolean(tripReader, "pastTrip"),
-                    Description = DbUtils.GetString(tripReader, "description"),
-                    Budget = DbUtils.GetInt(tripReader, "budget")
+                    Description = DbUtils.GetString(tripReader, "tripDisciption"),
+                    Budget = DbUtils.GetInt(tripReader, "tripBudget")
 
                 };
 
 
-                //trip.DineOptions = getDineOption(dineReader);
-                //while loop
-                // if trip Id
+                trip.DineOptions = GetDineOptions(dineReader, trip.Id);
+                trip.StayOptions = GetStayOptions(stayReader, trip.Id);
+                trip.ActvitityOptions = GetActivities(activityReader, trip.Id);
 
-                //trip.StayOptions = getDineOption();
-                //trip.Activity =
                 trips.Add(trip);
 
 
 
             }
-            
-            return trips;
 
+            return trips;
 
             //            using (var command = connection.CreateCommand())
             //            {
@@ -199,6 +195,81 @@ namespace Travlr.Repositories
 
         }
 
+        private static List<Stay> GetStayOptions(SqlDataReader reader, int tripId)
+        {
+            var stayOptions = new List<Stay>();
+
+            while (reader.Read())
+            {
+                if (!reader.IsDBNull(reader.GetOrdinal("soTripId")) && DbUtils.GetInt(reader, "soTripId") == tripId)
+                {
+                    var stayOption = new Stay()
+                    {
+                        Id = DbUtils.GetInt(reader, "stayId"),
+                        StayName = DbUtils.GetString(reader, "stayName"),
+                        StayAddress = DbUtils.GetString(reader, "stayAddress"),
+                        StayImage = DbUtils.GetString(reader, "stayImage"),
+                        StayDescription = DbUtils.GetString(reader, "stayDescription"),
+                        StayNotes = DbUtils.GetString(reader, "stayNotes")
+                    };
+
+                    stayOptions.Add(stayOption);
+                }
+            }
+
+            return stayOptions;
+        }
+
+        private static List<Activity> GetActivities(SqlDataReader reader, int tripId)
+        {
+            var activities = new List<Activity>();
+
+            while (reader.Read())
+            {
+                if (!reader.IsDBNull(reader.GetOrdinal("aoTripId")) && DbUtils.GetInt(reader, "aoTripId") == tripId)
+                {
+                    var activity = new Activity()
+                    {
+                        Id = DbUtils.GetInt(reader, "activityId"),
+                        ActivityName = DbUtils.GetString(reader, "activityName"),
+                        ActivityAddress = DbUtils.GetString(reader, "activityAddress"),
+                        ActivityImage = DbUtils.GetString(reader, "activityImage"),
+                        ActivityDescription = DbUtils.GetString(reader, "activityDescription"),
+                        ActivityNotes = DbUtils.GetString(reader, "activityNotes")
+                    };
+
+                    activities.Add(activity);
+                }
+            }
+
+            return activities;
+        }
+
+        private static List<Dine> GetDineOptions(SqlDataReader reader, int tripId)
+        {
+            var dineOptions = new List<Dine>();
+
+            while (reader.Read())
+            {
+                if (!reader.IsDBNull(reader.GetOrdinal("doTripId")) && DbUtils.GetInt(reader, "doTripId") == tripId)
+                {
+                    var dineOption = new Dine()
+                    {
+                        Id = DbUtils.GetInt(reader, "dineId"),
+                        DineName = DbUtils.GetString(reader, "dineName"),
+                        DineAddress = DbUtils.GetString(reader, "dineAddress"),
+                        DineImage = DbUtils.GetString(reader, "dineImage"),
+                        DineDescription = DbUtils.GetString(reader, "dineDescription"),
+                        DineNotes = DbUtils.GetString(reader, "dineNotes")
+                    };
+
+                    dineOptions.Add(dineOption);
+                }
+            }
+
+            return dineOptions;
+        }
+
         // private List<Dine> getDineOption(SqlDataReader reader, int tripId)
         // {
         //    while (reader.Read())
@@ -207,6 +278,141 @@ namespace Travlr.Repositories
         //    }
         //trip 
         //}
+
+        public List<Trip> GetByUserId(int tripUserId)
+        {
+            using (var connection = Connection)
+            {
+                connection.Open();
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = @"SELECT 
+                                        t.id as tripId,
+                                        t.userId as tripUserId,
+                                        t.tripName,
+                                        t.pastTrip,
+                                        t.description as tripDescription,
+                                        t.budget as tripBudget,
+                                        ao.id as aoId,
+                                        ao.tripId as aoTripId,
+                                        ao.activityId as aoActivityId,
+                                        a.id as activityId,
+                                        a.activityName,
+                                        a.activityAddress,
+                                        a.activityImage,
+                                        a.activityDescription,
+                                        a.activityNotes,
+                                        so.id as soId,
+                                        so.tripId as soTripId,
+                                        so.stayId as soStayId,
+                                        s.id as stayId,
+                                        s.stayName,
+                                        s.stayAddress,
+                                        s.stayImage,
+                                        s.stayDescription,
+                                        s.stayNotes,
+                                        do.id as doId,
+                                        do.tripId as doTripId,
+                                        do.dineId as doDineId,
+                                        d.id as dineId,
+                                        d.dineName,
+                                        d.dineAddress,
+                                        d.dineImage,
+                                        d.dineDescription,
+                                        d.dineNotes
+                                    FROM [Trip] t
+                                    LEFT JOIN [ActivityOptions] ao ON t.id = ao.tripId
+                                    LEFT JOIN [Activity] a ON ao.activityId = a.id
+                                    LEFT JOIN [StayOptions] so ON t.id = so.tripId
+                                    LEFT JOIN [Stay] s ON so.stayId = s.id
+                                    LEFT JOIN [DineOptions] do ON t.id = do.tripId
+                                    LEFT JOIN [Dine] d ON do.dineId = d.id
+                                    WHERE t.userId = @userId";
+
+                    DbUtils.AddParameter(command, "@userId", tripUserId);
+
+                    var reader = command.ExecuteReader();
+                    var trips = new List<Trip>();
+
+                    while (reader.Read())
+                    {
+                        var tripId = DbUtils.GetInt(reader, "tripId");
+                        var existingTrip = trips.FirstOrDefault(t => t.Id == tripId);
+
+                        if (existingTrip == null)
+                        {
+                            var trip = new Trip()
+                            {
+                                Id = tripId,
+                                UserId = DbUtils.GetInt(reader, "tripUserId"),
+                                TripName = DbUtils.GetString(reader, "tripName"),
+                                PastTrip = DbUtils.GetBoolean(reader, "pastTrip"),
+                                Description = DbUtils.GetString(reader, "tripDescription"),
+                                Budget = DbUtils.GetInt(reader, "tripBudget"),
+                                ActvitityOptions = new List<Activity>(),
+                                StayOptions = new List<Stay>(),
+                                DineOptions = new List<Dine>()
+                            };
+
+                            trips.Add(trip);
+                            existingTrip = trip;
+                        }
+
+                        var activityId = DbUtils.GetInt(reader, "activityId");
+                        if (activityId != 0)
+                        {
+                            var activity = new Activity()
+                            {
+                                Id = activityId,
+                                ActivityName = DbUtils.GetString(reader, "activityName"),
+                                ActivityAddress = DbUtils.GetString(reader, "activityAddress"),
+                                ActivityImage = DbUtils.GetString(reader, "activityImage"),
+                                ActivityDescription = DbUtils.GetString(reader, "activityDescription"),
+                                ActivityNotes = DbUtils.GetString(reader, "activityNotes")
+                            };
+
+                            existingTrip.ActvitityOptions.Add(activity);
+                        }
+
+                        var stayId = DbUtils.GetInt(reader, "stayId");
+                        if (stayId != 0)
+                        {
+                            var stay = new Stay()
+                            {
+                                Id = stayId,
+                                StayName = DbUtils.GetString(reader, "stayName"),
+                                StayAddress = DbUtils.GetString(reader, "stayAddress"),
+                                StayImage = DbUtils.GetString(reader, "stayImage"),
+                                StayDescription = DbUtils.GetString(reader, "stayDescription"),
+                                StayNotes = DbUtils.GetString(reader, "stayNotes")
+                            };
+
+                            existingTrip.StayOptions.Add(stay);
+                        }
+
+                        var dineId = DbUtils.GetInt(reader, "dineId");
+                        if (dineId != 0)
+                        {
+                            var dine = new Dine()
+                            {
+                                Id = dineId,
+                                DineName = DbUtils.GetString(reader, "dineName"),
+                                DineAddress = DbUtils.GetString(reader, "dineAddress"),
+                                DineImage = DbUtils.GetString(reader, "dineImage"),
+                                DineDescription = DbUtils.GetString(reader, "dineDescription"),
+                                DineNotes = DbUtils.GetString(reader, "dineNotes")
+                            };
+
+                            existingTrip.DineOptions.Add(dine);
+                        }
+                    }
+
+                    reader.Close();
+                    return trips;
+                }
+            }
+        }
+
 
         public Trip GetById(int id)
         {
