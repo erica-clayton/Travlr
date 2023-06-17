@@ -1,7 +1,8 @@
 import { Route, Routes } from "react-router-dom";
 import { ApplicationViews } from "./views/ApplicationViews";
 import { Login } from "./auth/Login";
-import { Register } from "./auth/Register";
+
+import { Register } from "./API/LoginAPI";
 
 export const Travlr = () => {
   return (
