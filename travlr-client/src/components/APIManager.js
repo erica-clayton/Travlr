@@ -75,9 +75,27 @@ export const FetchTrips = async () => {
         const tripIdResponse = await response.json();
         return tripIdResponse;
      }
+
+     export const FetchDineByTripId = async (id) => {
+        const response = await fetch(`https://localhost:7129/Trips/trips/${id}/dineoptions`);
+        const dineOptionsResponse = await response.json();
+        return dineOptionsResponse;
+     }
+
+     export const FetchStayByTripId = async (id) => {
+        const response = await fetch(`https://localhost:7129/Trips/trips/${id}/stayoptions`);
+        const stayOptionsResponse = await response.json();
+        return stayOptionsResponse;
+     }
+     
+     export const FetchActivityByTripId = async (id) => {
+        const response = await fetch(`https://localhost:7129/Trips/trips/${id}/activityoptions`)
+        const activityOptionsResponse = await response.json();
+        return activityOptionsResponse;
+     }
      
      export const DeleteTrip = async (id) => {
-        try {
+        
           const response = await fetch(`https://localhost:7129/Trips/${id}`, {
             method: 'DELETE',
             headers: {
@@ -85,14 +103,6 @@ export const FetchTrips = async () => {
             }
           });
       
-          if (response.ok) {
-            console.log('Trip deleted successfully');
-          } else {
-            console.error('Failed to delete trip');
-          }
-        } catch (error) {
-          console.error('Error deleting trip:', error);
-        }
       };
       
     
