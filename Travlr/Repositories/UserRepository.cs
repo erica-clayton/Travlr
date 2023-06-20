@@ -131,7 +131,7 @@ public class UserRepository : BaseRepository, IUserRepository
                             UserId = DbUtils.GetInt(reader, "tripUserId"),
                             TripName = DbUtils.GetString(reader, "tripName"),
                             PastTrip = DbUtils.GetBoolean(reader, "pastTrip"),
-                            Description = DbUtils.GetString(reader, "description"),
+                            Description = DbUtils.GetString(reader, "tripDescription"),
                             Budget = DbUtils.GetInt(reader, "budget")
                         };
                     }

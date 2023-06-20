@@ -9,9 +9,11 @@ public class Trip
     public bool PastTrip { get; set; }
     public string Description { get; set; } = "";
     public int Budget { get; set; }
-    public List<Dine> DineOptions { get; set; } = new();
-    public List<Stay> StayOptions { get; set; } = new();
-    public List<Activity> ActvitityOptions { get; set; } = new();
+    public List<Dine>? DineOptions { get; set; } = new();
+    public List<Stay>? StayOptions { get; set; } = new();
+    public List<Activity>? ActvitityOptions { get; set; } = new();
+    
+
 
 }
 

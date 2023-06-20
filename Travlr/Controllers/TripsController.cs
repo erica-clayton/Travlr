@@ -31,7 +31,30 @@ namespace Travlr.Controllers
                 return NotFound();
             }
             return Ok(trip);
+
         }
+
+        [HttpGet("trips/{id}/dineoptions")]
+        public ActionResult<List<Dine>> GetDineOptionsByTripId(int id)
+        {
+            var dineOptions = _tripRepo.GetDineOptionsByTripId(id);
+            return Ok(dineOptions);
+        }
+
+
+        [HttpGet("trips/{tripUserId}")]
+        public IActionResult GetTripsByUserId(int tripUserId)
+        {
+            var trips = _tripRepo.GetByUserId(tripUserId);
+
+            if (trips == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(trips);
+        }
+
 
         [HttpPost]
         public IActionResult Post(Trip trip)
@@ -43,6 +66,7 @@ namespace Travlr.Controllers
         [HttpPut("{id}")]
         public IActionResult Put(int id, Trip trip)
         {
+
             if (id != trip.Id)
             {
                 return BadRequest();
