@@ -9,6 +9,7 @@ namespace Travlr.Repositories
         List<Trip> GetAll();
         Trip GetById(int id);
         List<Trip> GetByUserId(int tripUserId);
+        List<Dine> GetDineOptionsByTripId(int tripId);
         void Update(Trip trip);
     }
 }

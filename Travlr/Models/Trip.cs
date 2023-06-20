@@ -12,6 +12,8 @@ public class Trip
     public List<Dine>? DineOptions { get; set; } = new();
     public List<Stay>? StayOptions { get; set; } = new();
     public List<Activity>? ActvitityOptions { get; set; } = new();
+    
+
 
 }
 

@@ -34,6 +34,14 @@ namespace Travlr.Controllers
 
         }
 
+        [HttpGet("trips/{id}/dineoptions")]
+        public ActionResult<List<Dine>> GetDineOptionsByTripId(int id)
+        {
+            var dineOptions = _tripRepo.GetDineOptionsByTripId(id);
+            return Ok(dineOptions);
+        }
+
+
         [HttpGet("trips/{tripUserId}")]
         public IActionResult GetTripsByUserId(int tripUserId)
         {
@@ -58,6 +66,7 @@ namespace Travlr.Controllers
         [HttpPut("{id}")]
         public IActionResult Put(int id, Trip trip)
         {
+
             if (id != trip.Id)
             {
                 return BadRequest();

@@ -47,6 +47,8 @@ namespace Travlr.Repositories
             }
         }
 
+
+
         public Dine GetById(int id)
         {
             using (var connection = Connection)
