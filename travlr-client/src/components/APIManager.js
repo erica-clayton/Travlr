@@ -1,3 +1,19 @@
+const GetConfig = {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  }
+
+  const GetPostConfig = (body) => {
+    var config = {
+        body : JSON.stringify(body),
+        credentials: "include",
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      }
+      return config
+  }
+  
+
 export const AddUser = async (userObj) => {
     // event.preventDefault()
 
@@ -31,20 +47,65 @@ export const FetchTrips = async () => {
     const tripsArray = await response.json();
     return tripsArray }
 
-    export const AddTrip = async (tripData) => {
-        const response = await fetch(`https://localhost:7129/Trips`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(tripData)
-        });
+    export const CreateTrip = async (tripData) => {
+        try {
+          const response = await fetch("https://localhost:7129/Trips", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(tripData)
+          });
       
-        console.log(response, "AddTrip");
-        if (response.ok) {
+          if (!response.ok) {
+            throw new Error("Failed to create trip");
+          }
+      
           const newTrip = await response.json();
           return newTrip;
-        } else {
-          return false;
+        } catch (error) {
+          console.error("Error creating trip:", error);
+          throw error;
         }
       };
+      
+
+      export const FetchTripById = async (id) => {
+        const response = await fetch(`https://localhost:7129/Trips/${id}`);
+        const tripIdResponse = await response.json();
+        return tripIdResponse;
+     }
+     
+     export const DeleteTrip = async (id) => {
+        try {
+          const response = await fetch(`https://localhost:7129/Trips/${id}`, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          });
+      
+          if (response.ok) {
+            console.log('Trip deleted successfully');
+          } else {
+            console.error('Failed to delete trip');
+          }
+        } catch (error) {
+          console.error('Error deleting trip:', error);
+        }
+      };
+      
+    
+     export const UpdateTrip = async (formData) => {
+       console.log(formData)
+          const response = await fetch(`https://localhost:7129/Trips/${formData.id}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+          });
+      
+      };
+
+      
